@@ -1,0 +1,152 @@
+Name:                   backend-feed-deployment
+Namespace:              default
+CreationTimestamp:      Sat, 31 Aug 2024 15:29:06 -0400
+Labels:                 app=backend-feed
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=backend-feed
+Replicas:               2 desired | 2 updated | 2 total | 2 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=backend-feed
+  Containers:
+   backend-feed:
+    Image:      kjwong/udagram-api-feed:1.0.0
+    Port:       8080/TCP
+    Host Port:  0/TCP
+    Environment Variables from:
+      udagram-env  ConfigMap  Optional: false
+    Environment:
+      POSTGRES_USERNAME:  <set to the key 'username' in secret 'pg-user-pass'>  Optional: false
+      POSTGRES_PASSWORD:  <set to the key 'password' in secret 'pg-user-pass'>  Optional: false
+    Mounts:
+      /root/.aws from aws-credentials (rw)
+  Volumes:
+   aws-credentials:
+    Type:          Secret (a volume populated by a Secret)
+    SecretName:    aws-secret
+    Optional:      false
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Progressing    True    NewReplicaSetAvailable
+  Available      True    MinimumReplicasAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   backend-feed-deployment-b55d65bb (2/2 replicas created)
+Events:          <none>
+
+
+Name:                   backend-user-deployment
+Namespace:              default
+CreationTimestamp:      Sat, 31 Aug 2024 15:32:26 -0400
+Labels:                 app=backend-user
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=backend-user
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=backend-user
+  Containers:
+   backend-feed:
+    Image:      kjwong/udagram-api-user:1.0.0
+    Port:       8080/TCP
+    Host Port:  0/TCP
+    Environment Variables from:
+      udagram-env  ConfigMap  Optional: false
+    Environment:
+      POSTGRES_USERNAME:  <set to the key 'username' in secret 'pg-user-pass'>  Optional: false
+      POSTGRES_PASSWORD:  <set to the key 'password' in secret 'pg-user-pass'>  Optional: false
+    Mounts:
+      /root/.aws from aws-credentials (rw)
+  Volumes:
+   aws-credentials:
+    Type:          Secret (a volume populated by a Secret)
+    SecretName:    aws-secret
+    Optional:      false
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Progressing    True    NewReplicaSetAvailable
+  Available      True    MinimumReplicasAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   backend-user-deployment-6c44cf8b58 (1/1 replicas created)
+Events:          <none>
+
+
+Name:                   frontend-deployment
+Namespace:              default
+CreationTimestamp:      Sat, 31 Aug 2024 15:37:31 -0400
+Labels:                 app=frontend
+Annotations:            deployment.kubernetes.io/revision: 4
+Selector:               app=frontend
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=frontend
+  Containers:
+   frontend:
+    Image:      kjwong/udagram-frontend:1.0.2
+    Port:       80/TCP
+    Host Port:  0/TCP
+    Requests:
+      cpu:         200m
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  frontend-deployment-586f74bcdb (0/0 replicas created), frontend-deployment-56fccffb9c (0/0 replicas created), frontend-deployment-6c5768cc67 (0/0 replicas created)
+NewReplicaSet:   frontend-deployment-796766d994 (1/1 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  37m    deployment-controller  Scaled up replica set frontend-deployment-6c5768cc67 to 1
+  Normal  ScalingReplicaSet  36m    deployment-controller  Scaled down replica set frontend-deployment-56fccffb9c to 0 from 1
+  Normal  ScalingReplicaSet  4m15s  deployment-controller  Scaled up replica set frontend-deployment-796766d994 to 1
+  Normal  ScalingReplicaSet  4m13s  deployment-controller  Scaled down replica set frontend-deployment-6c5768cc67 to 0 from 1
+
+
+Name:                   reverseproxy-deployment
+Namespace:              default
+CreationTimestamp:      Sat, 31 Aug 2024 15:33:21 -0400
+Labels:                 app=reverseproxy
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=reverseproxy
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=reverseproxy
+  Containers:
+   reverseproxy:
+    Image:         kjwong/reverseproxy:1.0.0
+    Port:          8080/TCP
+    Host Port:     0/TCP
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   reverseproxy-deployment-86cf675f5c (1/1 replicas created)
+Events:          <none>

@@ -14,3 +14,5 @@ aws eks describe-cluster --region us-east-1 --name kjwong-udacity-udagram --quer
 
 # Update kubeconfig after node group creation
 aws eks update-kubeconfig --region us-east-1 --name kjwong-udacity-udagram
+
+# Deploy everything in secret-deployment and app-deployment (do no upload secret yaml file to gitlab)

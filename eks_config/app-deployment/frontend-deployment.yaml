@@ -17,5 +17,8 @@ spec:
       containers:
       - name: frontend
         image: kjwong/udagram-frontend:1.0.2
+        resources:
+          requests:
+            cpu: "0.2"
         ports:
         - containerPort: 80
