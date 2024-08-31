@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-user-deployment
+  labels:
+    app: backend-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-user
+  template:
+    metadata:
+      labels:
+        app: backend-user
+    spec:
+      volumes:
+        - name: aws-credentials
+          secret:
+            secretName: aws-secret
+      containers:
+      - name: backend-feed
+        image: kjwong/udagram-api-user:1.0.0
+        envFrom:
+          - configMapRef:
+              name: udagram-env
+        env: 
+          - name: POSTGRES_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: pg-user-pass
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pg-user-pass
+                key: password
+        volumeMounts:
+          - name: aws-credentials
+            readOnly:
+            mountPath: "/root/.aws"
+        ports:
+        - containerPort: 8080
