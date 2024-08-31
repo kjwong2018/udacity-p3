@@ -8,6 +8,12 @@ export const sequelize = new Sequelize({
   'database': config.database,
   'host': config.host,
 
-  'dialect': config.dialect,
-  'storage': ':memory:',
+  dialect: config.dialect,
+  storage: ":memory:",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false, // added for compatibility with RDS
+    },
+  },
 });
